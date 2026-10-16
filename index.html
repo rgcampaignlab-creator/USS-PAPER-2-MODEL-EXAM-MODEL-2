@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMART VIDHYA USS MODEL EXAM - PAPER II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@400;500;600;700;800&family=Amiri:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root{
+    --navy:#0b3c68; --navy-2:#134f86; --ink:#16202c; --muted:#5b6778;
+    --paper:#ffffff; --bg:#eef2f6; --line:#cfd8e3; --omr:#c2415b; --omr-soft:#fbe9ed;
+    --ok:#15803d; --ok-soft:#e7f6ec; --bad:#b91c1c; --bad-soft:#fdecec;
+    --a:#0f766e; --a-soft:#e6f4f2; --b:#0b3c68; --b-soft:#e8f0f8; --c:#b45309; --c-soft:#fdf2e3;
+    --r:12px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-padding-top:140px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Anek Malayalam','Noto Sans',system-ui,sans-serif;font-size:17px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+  .font-arabic{font-family:'Amiri',serif;font-size:1.2em}
+  .font-urdu{font-family:'Noto Nastaliq Urdu',serif;line-height:2.3}
+  .font-sanskrit{font-family:'Noto Sans Devanagari','Anek Malayalam',sans-serif}
+  button{font:inherit;cursor:pointer}
+  button:focus-visible,input:focus-visible,.opt:focus-visible{outline:3px solid #f5b301;outline-offset:2px}
+  .wrap{max-width:780px;margin:0 auto;padding:16px 14px 60px}
+
+  /* Masthead */
+  .mast{background:var(--navy);color:#fff}
+  .mast .wrap{padding:18px 14px 16px}
+  .mast h1{margin:0;font-size:clamp(1.25rem,4.6vw,1.8rem);font-weight:800;letter-spacing:.02em;line-height:1.2}
+  .mast p{margin:4px 0 0;color:#c9d9ea;font-size:.95rem}
+  .mast-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55);padding:8px 14px;border-radius:999px;font-weight:700;font-size:.9rem}
+  .btn-ghost:hover{background:rgba(255,255,255,.12)}
+  .steps{display:flex;gap:6px;margin-top:14px}
+  .steps span{flex:1;font-size:.82rem;font-weight:700;color:#9fb8d3;border-top:4px solid rgba(255,255,255,.2);padding-top:6px}
+  .steps span.on{color:#fff;border-color:#f5b301}
+  .steps span.done{color:#d7e5f3;border-color:#7fb3e0}
+
+  .screen{display:none}
+  .screen.show{display:block}
+
+  /* OMR sheet (registration) */
+  .sheet{background:var(--paper);border:2px solid var(--omr);border-radius:6px;padding:18px;position:relative;margin-top:18px}
+  .sheet::before{content:"";position:absolute;inset:5px;border:1px solid var(--omr);border-radius:3px;pointer-events:none;opacity:.5}
+  .sheet-title{text-align:center;color:var(--omr);font-weight:800;font-size:1.05rem;border-bottom:2px solid var(--omr);padding-bottom:10px;margin:0 0 16px}
+  .field{border:1.5px solid var(--omr);border-radius:4px;padding:12px;margin-bottom:14px;background:#fff}
+  .field > label,.field .lbl{display:block;color:var(--omr);font-weight:800;font-size:.9rem;margin-bottom:8px}
+  .field .hint{font-size:.8rem;color:var(--muted);margin-top:6px}
+  .field input[type=text]{width:100%;padding:11px 12px;border:1.5px solid #9aa7b6;border-radius:6px;font-size:1.05rem;font-weight:700;letter-spacing:.06em;color:var(--ink)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr}}
+  .roll-matrix{display:flex;justify-content:space-between;gap:4px;margin-top:10px;max-width:300px}
+  .roll-col{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .rb{width:24px;height:24px;border:1.3px solid var(--omr);border-radius:50%;font-size:.7rem;font-weight:700;display:grid;place-items:center;color:var(--omr);transition:background .15s}
+  .rb.filled{background:#111;border-color:#111;color:#fff}
+  .roll-box{width:24px;height:26px;border:1.3px solid var(--omr);display:grid;place-items:center;font-weight:800;font-size:.9rem;margin-bottom:4px}
+
+  .choice-row{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{display:flex;align-items:center;gap:10px;border:2px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;font-weight:700;color:var(--ink);min-height:48px;text-align:left}
+  .chip .dot{width:22px;height:22px;border:2px solid var(--omr);border-radius:50%;flex:none;display:grid;place-items:center}
+  .chip.on{border-color:var(--navy);background:var(--b-soft)}
+  .chip.on .dot{background:#111;border-color:#111;box-shadow:inset 0 0 0 3px #fff}
+  .med-row .chip{flex:1 1 200px}
+  .lang-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:640px){.lang-grid{grid-template-columns:repeat(2,1fr)}}
+  .lang-grid .chip{flex-direction:column;align-items:center;justify-content:center;padding:12px 8px;gap:4px;text-align:center}
+  .lang-grid .native{font-size:1.25rem;line-height:1.4;color:var(--navy)}
+  .lang-grid .ml{font-size:.9rem}
+  .field.muted{background:#f3f5f8;border-style:dashed}
+  .field.muted input{background:#e7ebf0;color:#8792a2}
+  .note-red{color:var(--bad);font-size:.8rem;font-weight:700;margin-top:4px}
+  #sigCanvas{width:100%;height:70px;border:1px dashed #8a95a5;border-radius:6px;background:#fafbfc;touch-action:none;display:block}
+  .link-btn{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.8rem;padding:4px 0}
+
+  .btn{border:0;border-radius:10px;padding:14px 20px;font-weight:800;font-size:1.05rem}
+  .btn-main{background:var(--navy);color:#fff;width:100%}
+  .btn-main:hover{background:var(--navy-2)}
+  .btn-go{background:var(--ok);color:#fff;width:100%}
+  .btn-line{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+
+  /* Sticky exam bar */
+  .exambar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(11,60,104,.08)}
+  .exambar .wrap{padding:10px 14px}
+  .exambar-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.9rem}
+  .who{flex:1;min-width:0;font-weight:800;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .who small{display:block;font-weight:600;color:var(--muted);font-size:.78rem}
+  .count{flex:none;font-weight:800;color:var(--ink);white-space:nowrap;text-align:right;line-height:1.2}
+  .count small{display:block;font-size:.72rem;color:var(--muted);font-weight:600}
+  .count b{color:var(--ok);font-size:1.15rem}
+  .bar{height:8px;background:#e3e8ee;border-radius:99px;margin-top:8px;overflow:hidden;display:flex}
+  .bar i{display:block;height:100%;transition:width .25s}
+  .bar .ia{background:var(--a)} .bar .ib{background:var(--b)} .bar .ic{background:var(--c)}
+  .jump{display:flex;gap:6px;margin-top:8px;overflow-x:auto}
+  .jump button{flex:none;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;font-size:.8rem;font-weight:700;color:var(--muted)}
+
+  /* Subject headers */
+  .subj{margin-top:26px}
+  .subj-head{border-radius:var(--r);padding:14px 16px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .subj-head h2{margin:0;font-size:1.15rem;line-height:1.3}
+  .subj-head p{margin:2px 0 0;font-size:.85rem;opacity:.9}
+  .subj-head .tally{background:rgba(255,255,255,.18);border-radius:8px;padding:6px 10px;font-weight:800;font-size:.9rem;white-space:nowrap}
+  .subj.A .subj-head{background:var(--a)} .subj.B .subj-head{background:var(--b)} .subj.C .subj-head{background:var(--c)}
+
+  /* Question card */
+  .q{background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:14px;margin-top:12px}
+  .q.answered{border-color:#9dc3a9}
+  .q-top{display:flex;gap:12px;align-items:flex-start}
+  .qn{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.95rem;color:#fff}
+  .A .qn{background:var(--a)} .B .qn{background:var(--b)} .C .qn{background:var(--c)}
+  .q-text{font-weight:700;font-size:1.02rem;flex:1;min-width:0;padding-top:4px;overflow-wrap:anywhere}
+  .q-text[dir=rtl]{text-align:right}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  @media (max-width:560px){.opts{grid-template-columns:1fr}}
+  .opt{display:flex;align-items:center;gap:12px;width:100%;border:2px solid var(--line);background:#fafbfd;border-radius:10px;padding:10px 12px;text-align:left;color:var(--ink);min-height:52px;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:#9fb0c4}
+  .opt .bub{flex:none;width:32px;height:32px;border-radius:50%;border:2px solid var(--omr);color:var(--omr);display:grid;place-items:center;font-weight:800;font-size:.95rem;font-family:'Anek Malayalam',sans-serif;transition:background .15s,transform .15s}
+  .opt .ot{flex:1;min-width:0;overflow-wrap:anywhere;font-weight:600}
+  .opt[dir=rtl]{text-align:right}
+  .opt.picked{border-color:#111;background:#fff}
+  .opt.picked .bub{background:#111;border-color:#111;color:#fff;transform:scale(1.06)}
+
+  /* Answer status panel */
+  .status{background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:16px;margin-top:28px}
+  .status h3{margin:0 0 4px;font-size:1.05rem;color:var(--navy)}
+  .status p{margin:0 0 12px;color:var(--muted);font-size:.9rem}
+  .dots{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+  .dots button{aspect-ratio:1;border-radius:8px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-size:.8rem;color:var(--muted);padding:0}
+  .dots button.done{background:var(--ok-soft);border-color:#86c79c;color:var(--ok)}
+  .legend{display:flex;gap:14px;font-size:.8rem;color:var(--muted);margin-top:10px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px;border:1.5px solid var(--line)}
+  .legend i.g{background:var(--ok-soft);border-color:#86c79c}
+
+  /* Result */
+  .card{background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:18px;margin-top:18px}
+  .card h2{margin:0 0 6px;color:var(--navy);font-size:1.2rem}
+  .card p.lead{margin:0 0 14px;color:var(--muted);font-size:.92rem}
+  .roll-input{width:100%;padding:14px;border:2px solid var(--navy);border-radius:10px;font-size:1.5rem;font-weight:800;letter-spacing:.35em;text-align:center}
+  .res-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-bottom:2px solid var(--navy);padding-bottom:12px;margin-bottom:14px}
+  .res-head h3{margin:0;color:var(--navy);font-size:1.1rem}
+  .res-head .meta{font-size:.9rem;color:var(--muted);margin-top:4px}
+  .res-head .meta b{color:var(--ink)}
+  .total{flex:none;text-align:center;background:var(--navy);color:#fff;border-radius:12px;padding:10px 16px;min-width:108px}
+  .total .big{font-size:2.1rem;font-weight:800;line-height:1}
+  .total .of{font-size:.85rem;opacity:.85}
+  .subj-row{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 0;border-bottom:1px solid #e6ebf1}
+  .subj-row .nm{font-weight:700}
+  .subj-row .nm small{display:block;color:var(--muted);font-weight:600;font-size:.8rem}
+  .subj-row .sc{font-weight:800;font-size:1.2rem;text-align:right}
+  .subj-row .meter{grid-column:1/-1;height:10px;background:#e8edf3;border-radius:99px;overflow:hidden}
+  .subj-row .meter i{display:block;height:100%}
+  .grade{margin-top:14px;padding:12px 14px;border-radius:10px;font-weight:700}
+  details{margin-top:16px;border:1.5px solid var(--line);border-radius:10px;padding:0 12px}
+  summary{cursor:pointer;font-weight:800;color:var(--navy);padding:12px 0}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;margin-bottom:12px}
+  th,td{border:1px solid #d9e0e8;padding:6px;text-align:center}
+  th{background:var(--navy);color:#fff}
+  tr.ok td{background:var(--ok-soft)} tr.bad td{background:var(--bad-soft)} tr.na td{background:#f5f6f8;color:var(--muted)}
+  .tbl-wrap{overflow-x:auto}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .btn-row .btn{flex:1 1 200px}
+  .err{background:var(--bad-soft);color:var(--bad);border:1.5px solid #f3b4b4;border-radius:10px;padding:12px;font-weight:700;margin-top:14px}
+  .done-banner{background:var(--ok-soft);border:1.5px solid #86c79c;color:var(--ok);border-radius:var(--r);padding:16px;font-weight:700;margin-top:18px}
+  .done-banner b{display:block;font-size:1.1rem;margin-bottom:2px}
+
+  /* Answer review */
+  .rv-wrap{margin-top:22px;border-top:2px solid var(--navy);padding-top:16px}
+  .rv-title{margin:0 0 4px;color:var(--navy);font-size:1.15rem}
+  .rv-wrap .lead{margin:0 0 12px;color:var(--muted);font-size:.9rem}
+  .rv-filter{display:flex;gap:8px;flex-wrap:wrap}
+  .rv-filter button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-weight:700;font-size:.85rem;color:var(--muted)}
+  .rv-filter button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+  .rv-sec{margin-top:18px}
+  .rv{break-inside:avoid;page-break-inside:avoid}
+  .rv.rv-ok{border-color:#86c79c} .rv.rv-bad{border-color:#f0a3a3}
+  .r-opt{cursor:default}
+  .r-opt:hover{border-color:var(--line)}
+  .r-opt.r-key{border-color:var(--ok);background:var(--ok-soft)}
+  .r-opt.r-key .bub{background:var(--ok);border-color:var(--ok);color:#fff}
+  .r-opt.r-wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .r-opt.r-wrong .bub{background:var(--bad);border-color:var(--bad);color:#fff}
+  .r-tag{display:block;font-size:.75rem;font-weight:800;margin-top:2px;font-family:'Anek Malayalam',sans-serif}
+  .r-key .r-tag{color:var(--ok)} .r-wrong .r-tag{color:var(--bad)}
+  .rv-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .rv-badge{font-weight:800;font-size:.85rem;padding:4px 10px;border-radius:8px}
+  .rv-badge.ok{background:var(--ok-soft);color:var(--ok)} .rv-badge.bad{background:var(--bad-soft);color:var(--bad)} .rv-badge.na{background:#eef1f4;color:var(--muted)}
+  .rv-key{font-size:.9rem;color:var(--ink)}
+
+  /* Reading passage */
+  .passage{background:#fffaf0;border:1.5px solid #f0c987;border-radius:var(--r);padding:14px 16px;margin-top:12px}
+  .passage-h{font-weight:800;color:#8a4b08;font-size:.95rem;border-bottom:1px solid #f0d8b0;padding-bottom:8px;margin-bottom:10px}
+  .poem{border-left:4px solid #e0a23a;padding-left:14px;font-weight:600;line-height:1.7}
+  .poem p{margin:0}
+  .prose{font-weight:500;line-height:1.75;background:#fff;border-radius:8px;padding:10px 12px}
+  .poet{text-align:right;font-weight:800;color:#8a4b08;margin-top:8px}
+
+  /* Maths helpers */
+  .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;line-height:1.05;font-weight:700}
+  .frac-n{border-bottom:1.5px solid currentColor;padding:0 2px;font-size:.85em}
+  .frac-d{padding:0 2px;font-size:.85em}
+  .nowrap{white-space:nowrap}
+  .st{display:block;margin-top:6px;padding-left:10px;font-weight:600;color:#3b4656}
+  .st-l{display:block;margin-top:2px}
+  .fig-box{background:#fff;border:1px dashed #94a3b8;border-radius:8px;padding:8px;margin:10px 0 2px}
+  .fig-svg{display:block;width:100%;margin:0 auto;height:auto}
+
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(15,25,40,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+  .modal.show{display:flex}
+  .modal-box{background:#fff;border-radius:14px;max-width:400px;width:100%;padding:22px;text-align:center;border-top:6px solid var(--navy)}
+  .modal-box h3{margin:0 0 8px;color:var(--navy);font-size:1.15rem}
+  .modal-box p{margin:0 0 18px;color:var(--muted);font-size:.95rem}
+  .modal-btns{display:flex;gap:10px}
+  .modal-btns .btn{flex:1;padding:12px}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media print{
+    body{background:#fff}
+    .mast,.exambar,.no-print,#screenReg,#screenExam,.lookup{display:none!important}
+    #screenResult{display:block!important}
+    .card{border:0;padding:0}
+    details{border:0} details>*{display:block}
+  }
+</style>
+</head>
+<body>
+
+<header class="mast no-print">
+  <div class="wrap">
+    <div class="mast-row">
+      <div>
+        <h1>SMART VIDHYA USS MODEL EXAM</h1>
+        <p>പേപ്പർ 2 &nbsp;|&nbsp; 50 ചോദ്യങ്ങൾ &nbsp;|&nbsp; ഓൺലൈൻ OMR പരീക്ഷ</p>
+      </div>
+      <button class="btn-ghost" onclick="goResult()">റിസൾട്ട് നോക്കുക</button>
+    </div>
+    <div class="steps" id="stepBar">
+      <span data-s="1">1. രജിസ്ട്രേഷൻ</span>
+      <span data-s="2">2. പരീക്ഷ എഴുതുക</span>
+      <span data-s="3">3. റിസൾട്ട്</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STEP 1: REGISTRATION ============ -->
+<main id="screenReg" class="screen">
+  <div class="wrap">
+    <div class="sheet">
+      <div class="sheet-title">OMR ANSWER SHEET (PAPER II) &nbsp;|&nbsp; രജിസ്ട്രേഷൻ</div>
+
+      <div class="grid2">
+        <div>
+          <div class="field">
+            <label for="studentName">Name of the Candidate (കുട്ടിയുടെ പേര്)</label>
+            <input type="text" id="studentName" placeholder="NAME IN CAPITAL LETTERS" autocomplete="off"
+              oninput="this.value=this.value.replace(/[^a-zA-Z\s]/g,'').toUpperCase()">
+          </div>
+
+          <div class="field">
+            <label for="studentRoll">Roll Number (ഫോൺ നമ്പറിന്റെ അവസാന 6 അക്കങ്ങൾ)</label>
+            <input type="text" id="studentRoll" maxlength="6" inputmode="numeric" placeholder="6 അക്ക റോൾ നമ്പർ" autocomplete="off"
+              oninput="this.value=this.value.replace(/\D/g,'');updateRollBubbles(this.value)">
+            <div class="roll-matrix" id="rollMatrix"></div>
+            <div class="hint">നമ്പർ ടൈപ്പ് ചെയ്യുമ്പോൾ OMR ബബിളുകൾ തനിയെ കറുപ്പിക്കപ്പെടും. റിസൾട്ട് നോക്കാൻ ഈ നമ്പർ ഓർത്തുവെക്കുക.</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="field">
+            <span class="lbl">Gender</span>
+            <div class="choice-row" data-group="gender">
+              <button type="button" class="chip" data-val="Male"><span class="dot"></span>Male (ആൺ)</button>
+              <button type="button" class="chip" data-val="Female"><span class="dot"></span>Female (പെൺ)</button>
+            </div>
+          </div>
+
+          <div class="field muted">
+            <span class="lbl">Question Booklet No &amp; Set</span>
+            <input type="text" value="DISABLED" disabled>
+            <div class="note-red">ഇത് സെലക്ട് ചെയ്യേണ്ടതില്ല</div>
+          </div>
+
+          <div class="field">
+            <span class="lbl">Signature of Candidate</span>
+            <canvas id="sigCanvas"></canvas>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <button type="button" class="link-btn" onclick="clearSig()">Clear</button>
+              <span class="note-red" style="margin:0">ഒപ്പ് ഇടേണ്ടതില്ല</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="lbl">Medium (മീഡിയം തിരഞ്ഞെടുക്കുക)</span>
+        <div class="choice-row med-row" data-group="med">
+          <button type="button" class="chip" data-val="Malayalam"><span class="dot"></span>മലയാളം മീഡിയം</button>
+          <button type="button" class="chip" data-val="English"><span class="dot"></span>ഇംഗ്ലീഷ് മീഡിയം (English Medium)</button>
+        </div>
+        <div class="hint">അടിസ്ഥാനശാസ്ത്രം, സാമൂഹ്യശാസ്ത്രം ചോദ്യങ്ങൾ ഈ മീഡിയത്തിലായിരിക്കും. ഇംഗ്ലീഷ് ചോദ്യങ്ങൾ രണ്ടിനും ഒന്നുതന്നെ.</div>
+      </div>
+
+      <button class="btn btn-main" onclick="startExam()">പരീക്ഷ ആരംഭിക്കുക</button>
+    </div>
+  </div>
+</main>
+
+<!-- ============ STEP 2: EXAM ============ -->
+<div id="screenExam" class="screen">
+  <div class="exambar">
+    <div class="wrap">
+      <div class="exambar-row">
+        <div class="who" id="whoBox"></div>
+        <div class="count"><b id="ansCount">0</b> / 50<small>ഉത്തരം നൽകി</small></div>
+      </div>
+      <div class="bar" id="progBar"><i class="ia"></i><i class="ib"></i><i class="ic"></i></div>
+      <div class="jump" id="jumpRow"></div>
+    </div>
+  </div>
+  <main class="wrap" id="paper"></main>
+</div>
+
+<!-- ============ STEP 3: RESULT ============ -->
+<main id="screenResult" class="screen">
+  <div class="wrap">
+    <div id="doneBanner"></div>
+    <div class="card lookup">
+      <h2>റിസൾട്ട് പരിശോധിക്കുക (Check Result)</h2>
+      <p class="lead">രജിസ്ട്രേഷനിൽ നൽകിയ 6 അക്ക റോൾ നമ്പർ ടൈപ്പ് ചെയ്യുക.</p>
+      <input type="text" id="lookupRoll" class="roll-input" maxlength="6" inputmode="numeric" placeholder="------"
+        oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter')checkResult()">
+      <div class="btn-row">
+        <button class="btn btn-main" onclick="checkResult()">റിസൾട്ട് കാണുക</button>
+      </div>
+      <div id="lookupErr"></div>
+    </div>
+    <div id="resultOut"></div>
+    <div class="btn-row no-print" style="margin-top:22px">
+      <button class="btn btn-line" onclick="newExam()">പുതിയ കുട്ടിക്ക് പരീക്ഷ എഴുതാൻ</button>
+    </div>
+  </div>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h3 id="mTitle"></h3>
+    <p id="mMsg"></p>
+    <div class="modal-btns" id="mBtns"></div>
+  </div>
+</div>
+
+<script>
+var MASTER_EVALUATION_KEY = {
+  "English": { 1:'B', 2:'A', 3:'A', 4:'C', 5:'A', 6:'B', 7:'C', 8:'A', 9:'C', 10:'C', 11:'C', 12:'B', 13:'C', 14:'A', 15:'B' },
+  "BasicScience": { 16:'C', 17:'B', 18:'B', 19:'D', 20:'B', 21:'D', 22:'B', 23:'A', 24:'D', 25:'D', 26:'D', 27:'D', 28:'A', 29:'B', 30:'A' },
+  "SocialScience": { 31:'D', 32:'A', 33:'A', 34:'A', 35:'A', 36:'D', 37:'A', 38:'A', 39:'A', 40:'C', 41:'A', 42:'B', 43:'A', 44:'A', 45:'A', 46:'A', 47:'A', 48:'A', 49:'A', 50:'D' }
+};
+
+// Question Bank for Paper 2 (Part A English, Part B Basic Science, Part C Social Science)
+var EXAM_QUESTION_BANK = {
+  "English_PartA": [
+    { q: "1. Why did Riya make a nest for the bird?", a: "To play with it", b: "To protect it", c: "To sell it", d: "To catch it" },
+    { q: "2. What happened after several days?", a: "The bird became healthy.", b: "The bird became hungry.", c: "The bird ran away.", d: "The bird got injured again." },
+    { q: "3. Which quality of Riya is shown in the passage?", a: "Kindness", b: "Laziness", c: "Anger", d: "Carelessness" },
+    { q: "4. Choose the correct word: Riya ______ the bird for several days.", a: "care", b: "cares", c: "cared", d: "caring" },
+    { q: "5. The word 'helpless' means:", a: "Unable to help oneself", b: "Very strong", c: "Very happy", d: "Very clever" },
+    { q: "6. She arrived _____ the school at 9 a.m.", a: "from", b: "at", c: "up", d: "down" },
+    { q: "7. You are going to school, ......?", a: "Don't you", b: "Are you", c: "Aren't you", d: "Weren't you" },
+    { q: "8. She ______ coffee every morning.", a: "drinks", b: "drink", c: "drank", d: "drunk" },
+    { q: "9. He came ______ Delhi yesterday.", a: "to", b: "up", c: "from", d: "at" },
+    { q: "10. ______ earth is round.", a: "a", b: "an", c: "the", d: "none of these" },
+    { q: "11. Choose the synonym of 'happy'.", a: "Sad", b: "Angry", c: "Glad", d: "Weak" },
+    { q: "12. The boy ran ______ the hill carefully.", a: "to", b: "down", c: "at", d: "from" },
+    { q: "13. Choose the correctly spelt word:", a: "Beautifull", b: "Beutiful", c: "Beautiful", d: "Beautifol" },
+    { q: "14. I am going ______ the market to buy some vegetables.", a: "to", b: "from", c: "at", d: "down" },
+    { q: "15. Choose the correct form: Ravi ______ to school every day.", a: "go", b: "goes", c: "went", d: "going" }
+  ],
+
+  "BasicScience_Malayalam": [
+    { q: "16. ഒരു കർഷകൻ തന്റെ കൃഷിയിടത്തിൽ സ്യൂഡോമോണസ് ജീവാണുവളമായി ഉപയോഗിക്കുന്നു. ഇതുമായി ബന്ധപ്പെട്ട പ്രസ്താവനകൾ പരിശോധിക്കുക:<br>A) സ്യൂഡോമോണസ് ഒരു പ്രയോജനകരമായ സൂക്ഷ്മജീവിയായതിനാൽ ജീവാണുവളമായി ഉപയോഗിക്കുന്നു.<br>B) ജീവാണുവളങ്ങളുടെ ഉപയോഗം മണ്ണിലെ പോഷക ലഭ്യത വർധിപ്പിക്കാൻ സഹായിക്കുന്നു.<br>C) ജീവാണുവളത്തിലെ സൂക്ഷ്മജീവികൾ മണ്ണിൽ പ്രവർത്തിച്ച് സസ്യങ്ങൾക്ക് ആവശ്യമായ പോഷകങ്ങൾ ലഭ്യമാക്കുന്നു.", a: "A മാത്രം ശരിയാണ്", b: "A, B മാത്രം ശരിയാണ്", c: "A, B, C എന്നിവ ശരിയാണ്", d: "B, C മാത്രം ശരിയാണ്" },
+    { q: "17. കേന്ദ്ര കിഴങ്ങുവിള ഗവേഷണ കേന്ദ്രം (CTCRI) ഏത് ജില്ലയിലാണ്?", a: "ഇടുക്കി", b: "തിരുവനന്തപുരം", c: "കോട്ടയം", d: "കാസർകോട്" },
+    { q: "18. സൂര്യ, ഹരിത, നീലിമ ഇവ ഏത് സസ്യത്തിന്റെ സങ്കരയിനങ്ങളാണ്?", a: "വെണ്ട", b: "വഴുതന", c: "പച്ചമുളക്", d: "പയർ" },
+    { q: "19. മുട്ട ഉൽപാദനം വർദ്ധിപ്പിക്കാൻ ലക്ഷ്യമിട്ട പദ്ധതി ഏത്?", a: "നീല വിപ്ലവം", b: "പിങ്ക് വിപ്ലവം", c: "സുവർണ്ണ വിപ്ലവം", d: "രജത വിപ്ലവം" },
+    { q: "20. ഏറ്റവും മികച്ച വൈദ്യുത ചാലകം ഏത്?", a: "അലുമിനിയം", b: "വെള്ളി", c: "ചെമ്പ്", d: "ഇരുമ്പ്" },
+    { q: "21. ശരിയായ ജോഡി കണ്ടെത്തുക:", a: "തൈര് - സിട്രിക് ആസിഡ്", b: "പുളി - സിട്രിക് ആസിഡ്", c: "ആപ്പിൾ - ഓക്സാലിക് ആസിഡ്", d: "നെല്ലിക്ക - അസ്കോർബിക് ആസിഡ്" },
+    { q: "22. ദ്രാവകാവസ്ഥയിൽ സ്ഥിതി ചെയ്യുന്ന ലോഹം ഏത്?", a: "ലെഡ്", b: "മെർക്കുറി", c: "നിക്കൽ", d: "സിങ്ക്" },
+    { q: "23. സോപ്പ് നിർമ്മാണവുമായി ബന്ധപ്പെട്ട ശരിയായ പ്രസ്താവനകൾ കണ്ടെത്തുക:<br>1) സോപ്പ് നിർമാണത്തിൽ കാത്സ്യം ഹൈഡ്രോക്സൈഡ് ഉപയോഗിക്കുന്നു.<br>2) സോപ്പിന്റെ ഗാഢതയും അളവും കൂട്ടാൻ സ്റ്റോൺ പൗഡറും സോഡിയം സിലിക്കേറ്റും ഉപയോഗിക്കുന്നു.<br>3) പൊട്ടാസ്യം ഹൈഡ്രോക്സൈഡ് ആണ് സോഫ്റ്റ് സോപ്പ് നിർമാണത്തിൽ ഉപയോഗിക്കുന്നത്.<br>4) അലുമിനിയം ഹൈഡ്രോക്സൈഡ് സോപ്പ് നിർമാണത്തിൽ ഉപയോഗിക്കുന്ന ബേസാണ്.", a: "2 ഉം 3 ഉം ശരി", b: "1 ഉം 2 ഉം 3 ഉം ശരി", c: "എല്ലാം ശരി", d: "1 ഉം 3 ഉം ശരി" },
+    { q: "24. ചുവടെ നൽകിയിരിക്കുന്ന പ്രസ്താവനകൾ പരിശോധിച്ച് ശരിയായവ കണ്ടെത്തുക:<br>1. തൈരിൽ ലാക്ടോബാസിലസ് എന്ന ബാക്ടീരിയ അടങ്ങിയിട്ടുണ്ട്.<br>2. നാരങ്ങയിൽ അടങ്ങിയ ആസിഡാണ് ലാക്റ്റിക് ആസിഡ്.<br>3. ആസിഡുകൾക്ക് പുളിരുചിയാണുള്ളത്.<br>4. ആപ്പിളിൽ അടങ്ങിയിരിക്കുന്ന ആസിഡാണ് സിട്രിക് ആസിഡ്.", a: "1 ഉം 2 ഉം ശരി", b: "2 ഉം 4 ഉം ശരി", c: "3 ഉം 4 ഉം ശരി", d: "1 ഉം 3 ഉം ശരി" },
+    { q: "25. പതിവെക്കലുമായി ബന്ധപ്പെട്ട തെറ്റായ പ്രസ്താവന കണ്ടെത്തുക:", a: "മാതൃസസ്യത്തിൽ നിന്ന് പെൻസിൽ വണ്ണമുള്ള ഒരു കമ്പ് തിരഞ്ഞെടുക്കുന്നു.", b: "ചകിരിച്ചോറ്, മണ്ണ്, ചാണകപ്പൊടി എന്നിവ ചേർന്ന മിശ്രിതം ഉപയോഗിക്കുന്നു.", c: "മാതൃസസ്യത്തിന്റെ കമ്പുകളിൽ വേര് മുളപ്പിച്ച ശേഷം ആ ഭാഗം മുറിച്ചു നട്ടാണ് പുതിയ തൈകൾ ഉണ്ടാക്കുന്നത്.", d: "റൂട്ട് സ്റ്റോക്ക്, സയൺ എന്നിവ പതിവെക്കലുമായി ബന്ധപ്പെട്ടതാണ്." },
+    { q: "26. വൈദ്യുത കാന്തത്തിന്റെ ശക്തി കൂട്ടാൻ എന്ത് ചെയ്യണം?", a: "വൈദ്യുതിയുടെ തീവ്രത കൂട്ടുക", b: "ചുറ്റുകളുടെ എണ്ണം കൂട്ടുക", c: "ഇരുമ്പാണിയുടെ വലിപ്പം കൂട്ടുക", d: "ഇവ മൂന്നും ചെയ്യുക" },
+    { q: "27. വീട്ടിൽ ഷോക്ക് ഏറ്റു നിൽക്കുന്ന ആളെ രക്ഷിക്കാൻ ആദ്യം ചെയ്യേണ്ടത് എന്ത്?", a: "ആംബുലൻസ് വിളിച്ച് ആശുപത്രിയിൽ എത്തിക്കണം", b: "കൃത്രിമ ശ്വാസം നൽകി ശരീരം ചൂടാക്കണം", c: "ഷോക്കേറ്റ ആളുടെ നെഞ്ചിൽ രണ്ട് കൈയും വെച്ച് അമർത്തണം", d: "മെയിൻ സ്വിച്ച് ഓഫാക്കുകയും ഉണങ്ങിയ വടി കൊണ്ട് ആളെ തട്ടി മാറ്റുകയും ചെയ്യണം" },
+    { q: "28. കൃത്രിമ ഉപഗ്രഹങ്ങൾ പ്രവർത്തിക്കാനുള്ള വൈദ്യുതി എവിടെ നിന്നാണ് ലഭിക്കുന്നത്?", a: "സോളാർ പാനൽ", b: "ഡീസൽ", c: "പെട്രോൾ", d: "കൽക്കരി" },
+    { q: "29. സോളാർ സെൽ സൗരോർജ്ജത്തെ എന്ത് ഊർജ്ജമാക്കി മാറ്റുന്നു?", a: "താപോർജ്ജം", b: "വൈദ്യുതോർജ്ജം", c: "രാസോർജ്ജം", d: "ഗതികോർജ്ജം" },
+    { q: "30. തന്നിരിക്കുന്നവയിൽ വൈദ്യുതചാലകം അല്ലാത്തത് ഏത്?", a: "കാർബൺ", b: "അലുമിനിയം", c: "ഗ്രാഫൈറ്റ്", d: "മെർക്കുറി" }
+  ],
+
+  "BasicScience_English": [
+    { q: "16. A farmer uses Pseudomonas as a biofertilizer in his farm. Examine the following statements:<br>A) Pseudomonas is used as a biofertilizer because it is a beneficial microorganism.<br>B) The use of biofertilizers helps increase nutrient availability in the soil.<br>C) Microorganisms in biofertilizers act in the soil to make necessary nutrients available to plants.", a: "Only A is correct", b: "Only A and B are correct", c: "A, B, and C are correct", d: "Only B and C are correct" },
+    { q: "17. In which district is the Central Tuber Crops Research Institute (CTCRI) located?", a: "Idukki", b: "Thiruvananthapuram", c: "Kottayam", d: "Kasaragod" },
+    { q: "18. Surya, Haritha, and Neelima are hybrid varieties of which plant?", a: "Lady's Finger", b: "Brinjal", c: "Chilli", d: "Pea" },
+    { q: "19. Which revolution aimed at increasing egg production?", a: "Blue Revolution", b: "Pink Revolution", c: "Golden Revolution", d: "Silver Revolution" },
+    { q: "20. Which is the best conductor of electricity?", a: "Aluminium", b: "Silver", c: "Copper", d: "Iron" },
+    { q: "21. Find the correct pair:", a: "Curd – Citric acid", b: "Tamarind – Citric acid", c: "Apple – Oxalic acid", d: "Gooseberry – Ascorbic acid" },
+    { q: "22. Which metal exists in a liquid state at room temperature?", a: "Lead", b: "Mercury", c: "Nickel", d: "Zinc" },
+    { q: "23. Find the correct statements related to soap manufacturing:<br>1) Calcium hydroxide is used in soap manufacturing.<br>2) Stone powder and sodium silicate increase hardness and quantity.<br>3) Potassium hydroxide is used in making soft soap.<br>4) Aluminium hydroxide is a base used in soap manufacturing.", a: "Statements 2 & 3 are correct", b: "Statements 1, 2 & 3 are correct", c: "All statements are correct", d: "Statements 1 & 3 are correct" },
+    { q: "24. Examine the following statements and find the correct ones:<br>1. Curd contains the bacterium Lactobacillus.<br>2. The acid present in lemon is lactic acid.<br>3. Acids have a sour taste.<br>4. The acid present in apples is citric acid.", a: "Statements 1 & 2 are correct", b: "Statements 2 & 4 are correct", c: "Statements 3 & 4 are correct", d: "Statements 1 & 3 are correct" },
+    { q: "25. Find the incorrect statement related to layering:", a: "A pencil-thick stem is selected from the mother plant.", b: "A mixture of coir, soil, and powdered cow dung is used.", c: "Roots develop on a branch, then cut and planted as a new plant.", d: "Rootstock and scion are related to layering." },
+    { q: "26. How can the strength of an electromagnet be increased?", a: "Increase the intensity of electric current", b: "Increase the number of turns", c: "Increase the size of the iron core", d: "Do all three of these" },
+    { q: "27. What should be done first to rescue a person receiving an electric shock at home?", a: "Call an ambulance and take the person to the hospital", b: "Give artificial respiration and warm the body", c: "Press the person's chest with both hands", d: "Switch off the main switch & separate the person using a dry stick" },
+    { q: "28. From where does a satellite get the electricity needed to operate?", a: "Solar panel", b: "Diesel", c: "Petrol", d: "Coal" },
+    { q: "29. What form of energy does a solar cell convert solar energy into?", a: "Heat energy", b: "Electrical energy", c: "Chemical energy", d: "Kinetic energy" },
+    { q: "30. Which of the following is not an electrical conductor?", a: "Carbon", b: "Aluminium", c: "Graphite", d: "Mercury" }
+  ],
+
+  "SocialScience_Malayalam": [
+    { q: "31. അക്ബറിന്റെ മതസഹിഷ്ണുതാ നയവുമായി ബന്ധമുള്ള ശരിയായ പ്രസ്താവന ഏത്?<br>1. ഇബാദത്ത് ഖാന<br>2. ജസിയ നിർത്തലാക്കിയത്<br>3. ദിൻ ഇലാഹി<br>4. അടിമത്ത നയം", a: "1, 2 ശരി", b: "2, 3 ശരി", c: "എല്ലാം ശരി", d: "1, 2, 3 ശരി" },
+    { q: "32. മുഗൾ ഭരണം വ്യാപിച്ചിരുന്ന രാജ്യങ്ങൾ ഏവ?", a: "ബംഗ്ലാദേശ്, അഫ്ഗാനിസ്ഥാൻ, പാക്കിസ്ഥാൻ", b: "ബംഗ്ലാദേശ്, അഫ്ഗാനിസ്ഥാൻ, റഷ്യ", c: "കർണാടക, തമിഴ്നാട്, മധ്യപ്രദേശ്", d: "അഫ്ഗാനിസ്ഥാൻ, പാക്കിസ്ഥാൻ, ചൈന" },
+    { q: "33. ആഗ്ര കോട്ട നിർമ്മിച്ച വർഷം?", a: "1565", b: "1526", c: "1757", d: "1857" },
+    { q: "34. സൂഫിസം ഇന്ത്യയിൽ എത്തിച്ചേർന്നത്?", a: "പന്ത്രണ്ടാം നൂറ്റാണ്ട്", b: "പതിമൂന്നാം നൂറ്റാണ്ട്", c: "എട്ടാം നൂറ്റാണ്ട്", d: "ഒമ്പതാം നൂറ്റാണ്ട്" },
+    { q: "35. ഇന്ത്യൻ ഭരണഘടനയുടെ മുൻഗാമി എന്നറിയപ്പെടുന്ന നിയമം ഏത്?", a: "1935 ലെ ഗവൺമെന്റ് ഓഫ് ഇന്ത്യ ആക്ട്", b: "നിയമവാഴ്ച", c: "മൗലികാവകാശങ്ങൾ", d: "മൗലിക കർത്തവ്യങ്ങൾ" },
+    { q: "36. ഇന്ത്യൻ ഭരണഘടനയുടെ അടിസ്ഥാന സവിശേഷതയിൽ ഉൾപ്പെടാത്തത് ഏത്?", a: "പാർലമെന്ററി ജനാധിപത്യം", b: "മൗലികാവകാശങ്ങൾ", c: "മൗലിക കർത്തവ്യങ്ങൾ", d: "അലിഖിത ഭരണഘടന" },
+    { q: "37. വിദ്യാഭ്യാസം മൗലികാവകാശമാക്കിയ ഭരണഘടനാ ഭേദഗതി ഏത്?", a: "86", b: "42", c: "1", d: "101" },
+    { q: "38. മൊത്തം ജനസംഖ്യയിൽ എണ്ണത്തിൽ കുറവുള്ളത് എന്ന അർത്ഥത്തിൽ ഉപയോഗിക്കുന്ന പദം ഏത്?", a: "ന്യൂനപക്ഷം", b: "ഭൂരിപക്ഷം", c: "സംവരണം", d: "ഒഴിവാക്കപ്പെട്ടത്" },
+    { q: "39. ഭിന്നശേഷിക്കാരുടെ അവകാശ സംരക്ഷണ നിയമം നടപ്പിലാക്കിയത് എന്ന്?", a: "2016", b: "1948", c: "1891", d: "1956" },
+    { q: "40. ഭൂമിയുടെ ഉള്ളറയിലെ ഏത് മേഖലയ്ക്കാണ് NIFE എന്ന പേരുള്ളത്?", a: "ഭൂവൽക്കം", b: "മാന്റിൽ", c: "അകക്കാമ്പ്", d: "പുറക്കാമ്പ്" },
+    { q: "41. അന്തരീക്ഷത്തിൽ ഏറ്റവും കൂടുതലുള്ള വാതകം?", a: "നൈട്രജൻ", b: "ഓക്സിജൻ", c: "കാർബൺ ഡയോക്സൈഡ്", d: "ഹൈഡ്രജൻ" },
+    { q: "42. അന്തരീക്ഷത്തിൽ 21 ശതമാനം കാണപ്പെടുന്ന വാതകം?", a: "നൈട്രജൻ", b: "ഓക്സിജൻ", c: "കാർബൺ ഡയോക്സൈഡ്", d: "ഹൈഡ്രജൻ" },
+    { q: "43. POCSO നിയമം നടപ്പിലാക്കിയത് എന്ന്?", a: "2012", b: "1948", c: "1891", d: "1956" },
+    { q: "44. ഭൂമിയുടെ ഏറ്റവും പുറമെയുള്ള പാളി?", a: "ഭൂവൽക്കം", b: "മാന്റിൽ", c: "അകക്കാമ്പ്", d: "പുറക്കാമ്പ്" },
+    { q: "45. അന്തരീക്ഷത്തിൽ ഏറ്റവും മുകളിലുള്ള പാളി?", a: "എക്സോസ്ഫിയർ", b: "മിസോസ്ഫിയർ", c: "അയണോസ്ഫിയർ", d: "തെർമോസ്ഫിയർ" },
+    { q: "46. അന്തരീക്ഷത്തിലെ ഏറ്റവും താഴെയുള്ള പാളി?", a: "ട്രോപോസ്ഫിയർ", b: "സ്ട്രാറ്റോസ്ഫിയർ", c: "മിസോസ്ഫിയർ", d: "തെർമോസ്ഫിയർ" },
+    { q: "47. ഓസോൺ ദിനം ആചരിക്കുന്നത് എന്ന്?", a: "സെപ്റ്റംബർ 16", b: "സെപ്റ്റംബർ 20", c: "സെപ്റ്റംബർ 21", d: "ഓഗസ്റ്റ് 15" },
+    { q: "48. ഓസോൺ പാളിയിൽ സുഷിരങ്ങൾ ഉണ്ടാക്കുന്നത്?", a: "ക്ലോറോഫ്ലൂറോ കാർബൺ", b: "കാർബൺ ഡയോക്സൈഡ്", c: "കാർബൺ മോണോക്സൈഡ്", d: "സൾഫർ ഡയോക്സൈഡ്" },
+    { q: "49. ശുദ്ധജലത്തിന്റെ pH മൂല്യം എത്രയാണ്?", a: "7", b: "7 ൽ താഴെ", c: "5 ൽ കുറവ്", d: "6" },
+    { q: "50. അന്തരീക്ഷത്തിൽ ഏറ്റവും കുറഞ്ഞ താപനില അനുഭവപ്പെടുന്ന പാളി?", a: "ട്രോപ്പോസ്ഫിയർ", b: "സ്ട്രാറ്റോസ്ഫിയർ", c: "തെർമോസ്ഫിയർ", d: "മിസോസ്ഫിയർ" }
+  ],
+
+  "SocialScience_English": [
+    { q: "31. Which are correctly related to Akbar's policy of religious tolerance?<br>1. Ibadat Khana<br>2. Abolition of Jizya<br>3. Din-i-Ilahi<br>4. Policy of slavery", a: "1, 2 correct", b: "2, 3 correct", c: "All correct", d: "1, 2, 3 correct" },
+    { q: "32. Mughal rule extended over which present-day countries?", a: "Bangladesh, Afghanistan, Pakistan", b: "Bangladesh, Afghanistan, Russia", c: "Karnataka, Tamil Nadu, Madhya Pradesh", d: "Afghanistan, Pakistan, China" },
+    { q: "33. In which year was the construction of Agra Fort started?", a: "1565", b: "1526", c: "1757", d: "1857" },
+    { q: "34. When did Sufism reach India?", a: "12th century", b: "13th century", c: "8th century", d: "9th century" },
+    { q: "35. Which Act is known as the forerunner of the Indian Constitution?", a: "Government of India Act, 1935", b: "Rule of Law", c: "Fundamental Rights", d: "Fundamental Duties" },
+    { q: "36. Which of the following is NOT a basic feature of the Indian Constitution?", a: "Parliamentary democracy", b: "Fundamental Rights", c: "Fundamental Duties", d: "Unwritten Constitution" },
+    { q: "37. Which Constitutional Amendment made education a Fundamental Right?", a: "86", b: "42", c: "1", d: "101" },
+    { q: "38. Which term is used to mean 'fewer in number in the total population'?", a: "Minority", b: "Majority", c: "Reservation", d: "Excluded" },
+    { q: "39. When was the Rights of Persons with Disabilities Act implemented?", a: "2016", b: "1948", c: "1891", d: "1956" },
+    { q: "40. Which zone of the Earth's interior is known as NIFE?", a: "Crust", b: "Mantle", c: "Inner core", d: "Outer core" },
+    { q: "41. Which gas is found in the largest amount in the atmosphere?", a: "Nitrogen", b: "Oxygen", c: "Carbon dioxide", d: "Hydrogen" },
+    { q: "42. Which gas makes up 21 percent of the atmosphere?", a: "Nitrogen", b: "Oxygen", c: "Carbon dioxide", d: "Hydrogen" },
+    { q: "43. When was the POCSO Act implemented?", a: "2012", b: "1948", c: "1891", d: "1956" },
+    { q: "44. Which is the outermost layer of the Earth?", a: "Crust", b: "Mantle", c: "Inner core", d: "Outer core" },
+    { q: "45. Which is the topmost layer of the atmosphere?", a: "Exosphere", b: "Mesosphere", c: "Ionosphere", d: "Thermosphere" },
+    { q: "46. Which is the lowest layer of the atmosphere?", a: "Troposphere", b: "Stratosphere", c: "Mesosphere", d: "Thermosphere" },
+    { q: "47. When is Ozone Day observed?", a: "September 16", b: "September 20", c: "September 21", d: "August 15" },
+    { q: "48. What causes holes in the ozone layer?", a: "Chlorofluorocarbons", b: "Carbon dioxide", c: "Carbon monoxide", d: "Sulphur dioxide" },
+    { q: "49. What is the pH value of pure water?", a: "7", b: "Below 7", c: "Less than 5", d: "6" },
+    { q: "50. In which layer of the atmosphere is the lowest temperature experienced?", a: "Troposphere", b: "Stratosphere", c: "Thermosphere", d: "Mesosphere" }
+  ]
+};
+
+var PASSAGES = {
+  1: "<div class=\"passage\"><div class=\"passage-h\">Read the passage and answer questions 1 to 5</div><div class=\"prose\">Riya loved spending time in her grandmother’s garden. Every morning, she watered the plants and removed the weeds. One day, she noticed a small bird with an injured wing near a tree. She gently picked it up and gave it some water. Riya made a small nest for the bird in a basket. She took care of it for several days. Soon, the bird became healthy and flew away. Riya felt very happy because she had helped a helpless creature.</div></div>"
+};
+
+var DB_KEY = 'SMART_USS_EXAMS_DB_P2_SET4';
+var DRAFT_KEY = 'SMART_USS_DRAFT_P2_SET4';
+
+var state = { reg:{}, answers:{} };
+
+/* ---------- helpers ---------- */
+function $(id){ return document.getElementById(id); }
+function store(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function drop(k){ try{ localStorage.removeItem(k); }catch(e){} }
+function db(){ return store(DB_KEY) || {}; }
+
+function showModal(title, msg, btns){
+  $('mTitle').textContent = title; $('mMsg').textContent = msg;
+  var box = $('mBtns'); box.innerHTML = '';
+  (btns || [{t:'ശരി (OK)'}]).forEach(function(b){
+    var el = document.createElement('button');
+    el.className = 'btn ' + (b.cls || 'btn-main'); el.textContent = b.t;
+    el.onclick = function(){ $('modal').classList.remove('show'); if(b.fn) b.fn(); };
+    box.appendChild(el);
+  });
+  $('modal').classList.add('show');
+  box.lastChild.focus();
+}
+
+function showScreen(n){
+  ['screenReg','screenExam','screenResult'].forEach(function(id,i){ $(id).classList.toggle('show', i===n-1); });
+  var spans = document.querySelectorAll('#stepBar span');
+  for(var i=0;i<spans.length;i++){
+    var s = +spans[i].getAttribute('data-s');
+    spans[i].className = s===n ? 'on' : (s<n ? 'done' : '');
+  }
+  window.scrollTo(0,0);
+}
+
+/* ---------- registration ---------- */
+function buildRollMatrix(){
+  var h = '';
+  for(var c=0;c<6;c++){
+    h += '<div class="roll-col"><div class="roll-box" id="rbx_'+c+'"></div>';
+    for(var d=0; d<=9; d++) h += '<div class="rb" id="rb_'+c+'_'+d+'">'+d+'</div>';
+    h += '</div>';
+  }
+  $('rollMatrix').innerHTML = h;
+}
+function updateRollBubbles(v){
+  for(var c=0;c<6;c++){
+    $('rbx_'+c).textContent = v[c] || '';
+    for(var d=0;d<=9;d++) $('rb_'+c+'_'+d).classList.toggle('filled', v[c]===String(d));
+  }
+}
+function wireChoices(){
+  var groups = document.querySelectorAll('[data-group]');
+  for(var i=0;i<groups.length;i++){
+    groups[i].addEventListener('click', function(e){
+      var chip = e.target.closest('.chip'); if(!chip) return;
+      var g = this.getAttribute('data-group');
+      var all = this.querySelectorAll('.chip');
+      for(var j=0;j<all.length;j++) all[j].classList.remove('on');
+      chip.classList.add('on');
+      state.reg[g] = chip.getAttribute('data-val');
+    });
+  }
+}
+
+function startExam(){
+  var name = $('studentName').value.trim();
+  var roll = $('studentRoll').value.trim();
+  var r = state.reg;
+  if(!name || !/^[A-Z\s]+$/.test(name)) return showModal('ശ്രദ്ധിക്കുക','കുട്ടിയുടെ പേര് ഇംഗ്ലീഷ് ക്യാപിറ്റൽ അക്ഷരങ്ങളിൽ നൽകുക.');
+  if(!/^\d{6}$/.test(roll)) return showModal('ശ്രദ്ധിക്കുക','6 അക്ക റോൾ നമ്പർ പൂർണ്ണമായി നൽകുക.');
+  if(!r.gender) return showModal('ശ്രദ്ധിക്കുക','Gender തിരഞ്ഞെടുക്കുക.');
+  if(!r.med) return showModal('ശ്രദ്ധിക്കുക','മീഡിയം (മലയാളം / ഇംഗ്ലീഷ്) തിരഞ്ഞെടുക്കുക.');
+  if(db()[roll]) return showModal('ഈ റോൾ നമ്പർ ഉപയോഗിച്ചു കഴിഞ്ഞു',
+    'റോൾ നമ്പർ '+roll+' ഉപയോഗിച്ച് ഇതിനകം പരീക്ഷ എഴുതിയിട്ടുണ്ട്. ഒരു റോൾ നമ്പറിൽ ഒരു തവണ മാത്രമേ എഴുതാൻ പറ്റൂ. റിസൾട്ട് കാണാൻ "റിസൾട്ട് നോക്കുക" അമർത്തുക.');
+  r.name = name; r.roll = roll;
+  state.answers = {};
+  save(DRAFT_KEY, state);
+  renderPaper();
+  showScreen(2);
+}
+
+/* ---------- exam paper ---------- */
+function sections(){ return sectionsFor(state.reg.med); }
+function sectionsFor(med){
+  var en = med === 'English', m = en ? 'English' : 'Malayalam';
+  return [
+    { id:'A', title:'English', sub:'Part A', from:1, to:15,
+      qs:EXAM_QUESTION_BANK['English_PartA'], key:MASTER_EVALUATION_KEY['English'] },
+    { id:'B', title:(en?'Basic Science':'അടിസ്ഥാനശാസ്ത്രം (Basic Science)'), sub:'Part B', from:16, to:30,
+      qs:EXAM_QUESTION_BANK['BasicScience_'+m], key:MASTER_EVALUATION_KEY['BasicScience'] },
+    { id:'C', title:(en?'Social Science':'സാമൂഹ്യശാസ്ത്രം (Social Science)'), sub:'Part C', from:31, to:50,
+      qs:EXAM_QUESTION_BANK['SocialScience_'+m], key:MASTER_EVALUATION_KEY['SocialScience'] }
+  ];
+}
+function medLabel(m){ return m==='English' ? 'English Medium' : 'മലയാളം മീഡിയം'; }
+
+function renderPaper(){
+  var r = state.reg;
+  $('whoBox').innerHTML = r.name + '<small>Roll: ' + r.roll + ', ' + medLabel(r.med) + '</small>';
+  var secs = sections(), h = '';
+  $('jumpRow').innerHTML = secs.map(function(s){
+    return '<button onclick="document.getElementById(\'sec'+s.id+'\').scrollIntoView({behavior:\'smooth\'})">'+s.sub+': '+s.title.split(' (')[0]+'</button>';
+  }).join('');
+
+  secs.forEach(function(s){
+    var n = s.to - s.from + 1;
+    h += '<section class="subj '+s.id+'" id="sec'+s.id+'">';
+    h += '<div class="subj-head"><div><h2>'+s.title+'</h2><p>'+s.sub+', ചോദ്യം '+s.from+' മുതൽ '+s.to+' വരെ, '+n+' മാർക്ക്</p></div>'+
+         '<div class="tally" id="tally'+s.id+'">0 / '+n+'</div></div>';
+    s.qs.forEach(function(q, i){
+      var num = s.from + i;
+      var cls = q.cls || '';
+      var rtl = (cls==='font-arabic' || cls==='font-urdu') ? ' dir="rtl"' : '';
+      var text = q.q.replace(/^\s*\d+\s*\.\s*/, '');
+      if(typeof PASSAGES!=='undefined' && PASSAGES[num]) h += PASSAGES[num];
+      h += '<div class="q" id="q'+num+'"><div class="q-top"><div class="qn">'+num+'</div>'+
+           '<div class="q-text '+cls+'"'+rtl+'>'+text+'</div></div>'+(q.fig?'<div class="fig-box">'+q.fig+'</div>':'')+'<div class="opts" role="radiogroup" aria-label="ചോദ്യം '+num+'">';
+      ['A','B','C','D'].forEach(function(o){
+        h += '<button type="button" class="opt" role="radio" aria-checked="false" data-q="'+num+'" data-o="'+o+'"'+rtl+'>'+
+             '<span class="bub">'+o+'</span><span class="ot '+cls+'">'+q[o.toLowerCase()]+'</span></button>';
+      });
+      h += '</div></div>';
+    });
+    h += '</section>';
+  });
+
+  h += '<div class="status"><h3>ഉത്തരങ്ങളുടെ സ്ഥിതി</h3>'+
+       '<p>പച്ച നിറമുള്ളവക്ക് ഉത്തരം നൽകി. വെള്ള നിറമുള്ള നമ്പറിൽ തൊട്ടാൽ ആ ചോദ്യത്തിലേക്ക് പോകാം.</p>'+
+       '<div class="dots" id="dots">';
+  for(var k=1;k<=50;k++) h += '<button type="button" data-go="'+k+'">'+k+'</button>';
+  h += '</div><div class="legend"><span><i class="g"></i>ഉത്തരം നൽകി</span><span><i></i>ബാക്കിയുള്ളവ</span></div></div>';
+  h += '<div class="btn-row"><button class="btn btn-go" onclick="confirmSubmit()">പരീക്ഷ സബ്മിറ്റ് ചെയ്യുക (Submit)</button></div>';
+
+  $('paper').innerHTML = h;
+  for(var qn in state.answers) markPick(+qn, state.answers[qn]);
+  refreshProgress();
+}
+
+function markPick(num, opt){
+  var btns = document.querySelectorAll('.opt[data-q="'+num+'"]');
+  for(var i=0;i<btns.length;i++){
+    var on = btns[i].getAttribute('data-o') === opt;
+    btns[i].classList.toggle('picked', on);
+    btns[i].setAttribute('aria-checked', on ? 'true' : 'false');
+  }
+  var card = $('q'+num); if(card) card.classList.add('answered');
+}
+
+function refreshProgress(){
+  var total = 0, per = {A:0,B:0,C:0};
+  for(var qn in state.answers){ total++; qn=+qn; per[qn<=15?'A':(qn<=30?'B':'C')]++; }
+  $('ansCount').textContent = total;
+  var bars = document.querySelectorAll('#progBar i');
+  bars[0].style.width = (per.A/50*100)+'%'; bars[1].style.width = (per.B/50*100)+'%'; bars[2].style.width = (per.C/50*100)+'%';
+  if($('tallyA')){ $('tallyA').textContent = per.A+' / 15'; $('tallyB').textContent = per.B+' / 15'; $('tallyC').textContent = per.C+' / 20'; }
+  var dots = document.querySelectorAll('#dots button');
+  for(var i=0;i<dots.length;i++) dots[i].classList.toggle('done', !!state.answers[i+1]);
+}
+
+document.addEventListener('click', function(e){
+  var opt = e.target.closest('.opt');
+  if(opt && !opt.classList.contains('r-opt')){
+    var num = +opt.getAttribute('data-q'), o = opt.getAttribute('data-o');
+    state.answers[num] = o;
+    markPick(num, o); refreshProgress(); save(DRAFT_KEY, state);
+    return;
+  }
+  var fb = e.target.closest('#rvFilter button');
+  if(fb){
+    var f = fb.getAttribute('data-f'), bs = document.querySelectorAll('#rvFilter button');
+    for(var i=0;i<bs.length;i++) bs[i].classList.toggle('on', bs[i]===fb);
+    var cards = document.querySelectorAll('.rv');
+    for(var j=0;j<cards.length;j++) cards[j].style.display = (f==='all' || cards[j].getAttribute('data-st')===f) ? '' : 'none';
+    var secsEl = document.querySelectorAll('.rv-sec');
+    for(var m=0;m<secsEl.length;m++) secsEl[m].style.display = secsEl[m].querySelector('.rv:not([style*="none"])') ? '' : 'none';
+    return;
+  }
+  var go = e.target.closest('[data-go]');
+  if(go){ var t = $('q'+go.getAttribute('data-go')); if(t) t.scrollIntoView({behavior:'smooth', block:'center'}); }
+});
+
+function confirmSubmit(){
+  var left = [];
+  for(var i=1;i<=50;i++) if(!state.answers[i]) left.push(i);
+  var msg = left.length
+    ? left.length+' ചോദ്യങ്ങൾക്ക് ഉത്തരം നൽകിയിട്ടില്ല (ചോദ്യം: '+left.slice(0,12).join(', ')+(left.length>12?' ...':'')+'). എന്നാലും സബ്മിറ്റ് ചെയ്യണോ? സബ്മിറ്റ് ചെയ്താൽ പിന്നെ മാറ്റാൻ പറ്റില്ല.'
+    : 'എല്ലാ ചോദ്യങ്ങൾക്കും ഉത്തരം നൽകി. സബ്മിറ്റ് ചെയ്താൽ പിന്നെ ഉത്തരങ്ങൾ മാറ്റാൻ പറ്റില്ല.';
+  showModal('സബ്മിറ്റ് ചെയ്യട്ടെ?', msg, [
+    { t:'തിരികെ പോകുക', cls:'btn-line', fn: left.length ? function(){ $('q'+left[0]).scrollIntoView({behavior:'smooth',block:'center'}); } : null },
+    { t:'സബ്മിറ്റ് ചെയ്യുക', cls:'btn-go', fn: submitExam }
+  ]);
+}
+
+function submitExam(){
+  var r = state.reg, secs = sections(), scores = {};
+  secs.forEach(function(s){
+    var sc = 0;
+    for(var n=s.from;n<=s.to;n++) if(state.answers[n] && state.answers[n] === s.key[n]) sc++;
+    scores[s.id] = sc;
+  });
+  var all = db();
+  all[r.roll] = {
+    name:r.name, roll:r.roll, gender:r.gender, med:r.med,
+    partA:scores.A, partB:scores.B, partC:scores.C, total:scores.A+scores.B+scores.C,
+    answers:state.answers, time:new Date().toISOString()
+  };
+  save(DB_KEY, all);
+  drop(DRAFT_KEY);
+  $('doneBanner').innerHTML = '<div class="done-banner no-print"><b>പരീക്ഷ വിജയകരമായി സബ്മിറ്റ് ചെയ്തു!</b>താഴെ റോൾ നമ്പർ നൽകി റിസൾട്ട് കാണാം.</div>';
+  $('lookupRoll').value = r.roll;
+  $('resultOut').innerHTML = ''; $('lookupErr').innerHTML = '';
+  showScreen(3);
+  $('lookupRoll').focus();
+}
+
+/* ---------- result ---------- */
+function goResult(){
+  if($('screenExam').classList.contains('show')){
+    return showModal('പരീക്ഷ നടക്കുകയാണ്','നിങ്ങളുടെ ഉത്തരങ്ങൾ സേവ് ആയിട്ടുണ്ട്. റിസൾട്ട് പേജിലേക്ക് പോകണോ? പിന്നീട് തിരിച്ചു വന്ന് തുടരാം.', [
+      {t:'പരീക്ഷ തുടരുക', cls:'btn-line'}, {t:'റിസൾട്ട് പേജ്', fn:function(){ $('doneBanner').innerHTML=''; showScreen(3); }}
+    ]);
+  }
+  $('doneBanner').innerHTML = ''; showScreen(3); $('lookupRoll').focus();
+}
+
+function checkResult(){
+  var roll = $('lookupRoll').value.trim();
+  $('lookupErr').innerHTML = ''; $('resultOut').innerHTML = '';
+  if(!/^\d{6}$/.test(roll)){ $('lookupErr').innerHTML = '<div class="err">6 അക്ക റോൾ നമ്പർ നൽകുക.</div>'; return; }
+  var rec = db()[roll];
+  if(!rec){ $('lookupErr').innerHTML = '<div class="err">റോൾ നമ്പർ '+roll+' ൽ പരീക്ഷാ വിവരങ്ങൾ ഒന്നും കണ്ടില്ല. നമ്പർ ഒന്നുകൂടി പരിശോധിക്കുക.</div>'; return; }
+  renderResult(rec);
+}
+
+function renderResult(rec){
+  var secs0 = sectionsFor(rec.med), cols = ['var(--a)','var(--b)','var(--c)'], sc0 = [rec.partA, rec.partB, rec.partC];
+  var rows = secs0.map(function(s,i){ return { nm:s.title, sub:s.sub, sc:sc0[i], max:s.to-s.from+1, col:cols[i] }; });
+  var pct = Math.round(rec.total/50*100);
+  var g = pct>=70 ? ['var(--ok-soft)','var(--ok)','മികച്ച പ്രകടനം! അഭിനന്ദനങ്ങൾ.']
+        : pct>=50 ? ['var(--b-soft)','var(--navy)','നല്ല പ്രകടനം. തെറ്റിയ ചോദ്യങ്ങൾ ഒന്നുകൂടി പഠിക്കൂ.']
+        : ['var(--c-soft)','var(--c)','കൂടുതൽ പരിശീലനം വേണം. താഴെയുള്ള ഉത്തരസൂചിക നോക്കി പഠിക്കൂ.'];
+
+  var h = '<div class="card" id="resultCard">'+
+    '<div class="res-head"><div><h3>SMART VIDHYA USS MODEL EXAM (PAPER II), റിസൾട്ട്</h3>'+
+    '<div class="meta"><b>'+rec.name+'</b><br>റോൾ നമ്പർ: <b>'+rec.roll+'</b><br>'+medLabel(rec.med)+'</div></div>'+
+    '<div class="total"><div class="big">'+rec.total+'</div><div class="of">/ 50 മാർക്ക്</div></div></div>';
+
+  rows.forEach(function(r){
+    h += '<div class="subj-row"><div class="nm">'+r.nm+'<small>'+r.sub+'</small></div>'+
+         '<div class="sc">'+r.sc+' <span style="color:var(--muted);font-size:.85rem">/ '+r.max+'</span></div>'+
+         '<div class="meter"><i style="width:'+(r.sc/r.max*100)+'%;background:'+r.col+'"></i></div></div>';
+  });
+  h += '<div class="subj-row" style="border:0"><div class="nm">ആകെ മാർക്ക് (Total)</div><div class="sc">'+rec.total+' / 50</div></div>';
+  h += '<div class="grade" style="background:'+g[0]+';color:'+g[1]+'">'+pct+'%, '+g[2]+'</div>';
+
+  var ans = rec.answers || {}, secs = sectionsFor(rec.med);
+  var cOk = 0, cBad = 0, cNa = 0;
+  var rv = '';
+  secs.forEach(function(s){
+    var sc = 0, n = s.to - s.from + 1;
+    for(var k=s.from;k<=s.to;k++) if(ans[k] && ans[k]===s.key[k]) sc++;
+    rv += '<div class="subj '+s.id+' rv-sec"><div class="subj-head"><div><h2>'+s.title+'</h2><p>'+s.sub+', ചോദ്യം '+s.from+' മുതൽ '+s.to+' വരെ</p></div>'+
+          '<div class="tally">'+sc+' / '+n+'</div></div>';
+    s.qs.forEach(function(q, i){
+      var num = s.from + i, key = s.key[num], u = ans[num] || '';
+      var st = !u ? 'na' : (u===key ? 'ok' : 'bad');
+      if(st==='ok') cOk++; else if(st==='bad') cBad++; else cNa++;
+      var cls = q.cls || '';
+      var rtl = (cls==='font-arabic' || cls==='font-urdu') ? ' dir="rtl"' : '';
+      var badge = st==='ok' ? '<span class="rv-badge ok">✔ ശരി, 1 മാർക്ക്</span>'
+                : st==='bad' ? '<span class="rv-badge bad">✘ തെറ്റ്, 0 മാർക്ക്</span>'
+                : '<span class="rv-badge na">ഉത്തരം നൽകിയില്ല</span>';
+      if(typeof PASSAGES!=='undefined' && PASSAGES[num]) rv += PASSAGES[num].replace('class="passage"','class="passage rv" data-st="p"');
+      rv += '<div class="q rv rv-'+st+'" data-st="'+st+'"><div class="q-top"><div class="qn">'+num+'</div>'+
+            '<div class="q-text '+cls+'"'+rtl+'>'+q.q.replace(/^\s*\d+\s*\.\s*/, '')+'</div></div>'+(q.fig?'<div class="fig-box">'+q.fig+'</div>':'')+'<div class="opts">';
+      ['A','B','C','D'].forEach(function(o){
+        var oc = o===key ? ' r-key' : (o===u ? ' r-wrong' : '');
+        var tag = o===key && o===u ? '<span class="r-tag">നിങ്ങളുടെ ഉത്തരം, ശരി</span>'
+                : o===key ? '<span class="r-tag">ശരിയുത്തരം</span>'
+                : o===u ? '<span class="r-tag">നിങ്ങളുടെ ഉത്തരം</span>' : '';
+        rv += '<div class="opt r-opt'+oc+(o===u?' r-mine':'')+'"'+rtl+'><span class="bub">'+o+'</span>'+
+              '<span class="ot '+cls+'">'+q[o.toLowerCase()]+tag+'</span></div>';
+      });
+      rv += '</div><div class="rv-foot">'+badge+(st==='bad'?'<span class="rv-key">ശരിയുത്തരം: <b>'+key+'</b></span>':'')+'</div></div>';
+    });
+    rv += '</div>';
+  });
+  h += '<div class="rv-wrap"><h3 class="rv-title">ചോദ്യങ്ങളും ഉത്തരങ്ങളും</h3>'+
+       '<p class="lead">പച്ച നിറത്തിലുള്ളത് ശരിയുത്തരം. ചുവപ്പ് നിറത്തിലുള്ളത് നിങ്ങൾ തിരഞ്ഞെടുത്ത തെറ്റായ ഉത്തരം.</p>'+
+       '<div class="rv-filter no-print" id="rvFilter">'+
+       '<button class="on" data-f="all">എല്ലാം (50)</button>'+
+       '<button data-f="ok">ശരി ('+cOk+')</button>'+
+       '<button data-f="bad">തെറ്റ് ('+cBad+')</button>'+
+       '<button data-f="na">നൽകാത്തവ ('+cNa+')</button></div>'+ rv + '</div>';
+  h += '<div class="btn-row no-print"><button class="btn btn-main" onclick="downloadResult(this)">റിസൾട്ട് PDF ആയി സേവ് ചെയ്യുക</button></div></div>';
+  $('resultOut').innerHTML = h;
+  $('resultCard').scrollIntoView({behavior:'smooth'});
+}
+
+function downloadResult(btn){
+  var el = $('resultCard'), all = document.querySelector('#rvFilter [data-f=all]');
+  if(all) all.click();
+  if(typeof html2pdf === 'undefined'){ window.print(); return; }
+  var old = btn.textContent; btn.disabled = true; btn.textContent = 'PDF തയ്യാറാകുന്നു...';
+  html2pdf().set({
+    margin:[0.3,0.3,0.4,0.3], filename:'USS_Result_'+($('lookupRoll').value||'')+'.pdf',
+    image:{type:'jpeg',quality:0.98},
+    html2canvas:{scale:2,useCORS:true,ignoreElements:function(x){ return x.classList && x.classList.contains('no-print'); }},
+    jsPDF:{unit:'in',format:'a4',orientation:'portrait'}, pagebreak:{mode:['css','legacy']}
+  }).from(el).save().then(done).catch(function(){ window.print(); done(); });
+  function done(){ btn.disabled = false; btn.textContent = old; }
+}
+
+function newExam(){
+  state = { reg:{}, answers:{} };
+  $('studentName').value = ''; $('studentRoll').value = ''; updateRollBubbles('');
+  var chips = document.querySelectorAll('#screenReg .chip.on');
+  for(var i=0;i<chips.length;i++) chips[i].classList.remove('on');
+  $('resultOut').innerHTML = ''; $('lookupRoll').value = ''; $('doneBanner').innerHTML = '';
+  showScreen(1); sizeSig(); clearSig();
+}
+
+/* ---------- signature ---------- */
+var cv, cx, drawing = false;
+function sizeSig(){ if(!cv) return; var r = cv.getBoundingClientRect(); if(r.width){ cv.width = r.width; cv.height = r.height; } }
+function clearSig(){ if(cx){ cx.clearRect(0,0,cv.width,cv.height); cx.beginPath(); } }
+function sigPos(e){ var r = cv.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; }
+function initSig(){
+  cv = $('sigCanvas'); cx = cv.getContext('2d'); sizeSig();
+  cv.addEventListener('pointerdown', function(e){ drawing = true; var p = sigPos(e); cx.beginPath(); cx.moveTo(p[0],p[1]); cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointermove', function(e){ if(!drawing) return; var p = sigPos(e); cx.lineWidth = 2; cx.lineCap = 'round'; cx.strokeStyle = '#111'; cx.lineTo(p[0],p[1]); cx.stroke(); });
+  ['pointerup','pointerleave','pointercancel'].forEach(function(ev){ cv.addEventListener(ev, function(){ drawing = false; }); });
+}
+
+/* ---------- boot ---------- */
+window.addEventListener('load', function(){
+  buildRollMatrix(); wireChoices(); showScreen(1); initSig();
+  var d = store(DRAFT_KEY);
+  if(d && d.reg && d.reg.roll && !db()[d.reg.roll]){
+    showScreen(1);
+    var cnt = Object.keys(d.answers||{}).length;
+    showModal('പൂർത്തിയാക്കാത്ത പരീക്ഷ',
+      d.reg.name+' (Roll '+d.reg.roll+') എന്ന കുട്ടിയുടെ പരീക്ഷ പകുതിയിൽ നിൽക്കുന്നു ('+cnt+' / 50 ഉത്തരം നൽകി). തുടരണോ?', [
+      { t:'പുതിയത് തുടങ്ങുക', cls:'btn-line', fn:function(){ drop(DRAFT_KEY); } },
+      { t:'തുടരുക', fn:function(){ state = d; renderPaper(); showScreen(2); } }
+    ]);
+  } else {
+    showScreen(1);
+  }
+});
+window.addEventListener('resize', sizeSig);
+</script>
+</body>
+</html>
